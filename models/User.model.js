@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     },
     signUpBy: {
         type: String,
-        enum: ["Email", "Phone Number"],
+        enum: ["Email", "PhoneNumber"],
         required: true
     }
     // OTP_Sent: {
