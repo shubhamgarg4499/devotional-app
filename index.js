@@ -31,10 +31,25 @@ passportHandler()
 
 // routes starts
 app.get("/", (req, res, next) => {
-    res.send(`<a href="/auth/google">Login</a>`)
+    if (req.isAuthenticated()) {
+        res.send(`<a href="/">Logout</a>`)
+    } else {
+
+        res.send(`<a href="/auth/google">Login</a>`)
+    }
+
 })
-const authRoute = require("./routes/AuthRoutes");
+const authRoute = require("./routes/Auth.Routes");
+const isAuthenticated = require("./middlewares/isAuthenticated");
 app.use("/auth/google", authRoute)
+
+
+// userRoutes
+const userRoute = require('./routes/User.routes')
+
+app.use('/user', userRoute)
+
+
 // routes ends
 
 

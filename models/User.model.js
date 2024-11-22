@@ -12,6 +12,13 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
+    gender: {
+        type: String,
+        enum: ["Male", "Female", "Other"]
+    },
+    dob: {
+        type: Date,
+    },
     profile_picture: {
         type: String,
         default: null,
@@ -22,14 +29,22 @@ const userSchema = new mongoose.Schema({
     countryCode: {
         type: String,
     },
-    OTP_Sent: {
-        type: Date,
-        default: Date.now
+    about: {
+        type: String
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    signUpBy: {
+        type: String,
+        enum: ["Email", "Phone Number"],
+        required: true
     }
-    // isAdmin: {
-    //     type: Boolean,
-    //     default: false
-    // }
+    // OTP_Sent: {
+    //     type: Date,
+    //     default: Date.now
+    // },
 
 }, { timestamps: true })
 

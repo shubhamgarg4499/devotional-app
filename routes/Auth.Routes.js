@@ -1,5 +1,7 @@
 const express = require("express");
 const passport = require("passport");
+const isAuthenticated = require("../middlewares/isAuthenticated");
+// const isAuthenticated = require("../middlewares/isAuthenticated");
 const authRoute = express.Router()
 
 
@@ -14,10 +16,20 @@ authRoute.route('/callback').get(passport.authenticate('google', { failureRedire
 // get login user info
 authRoute.route('/profile').get((req, res) => {
     if (!req.isAuthenticated()) {
-        return res.redirect('/auth/google');
+        return res.redirect('/');
     }
     res.json({ res: req.user })
-
 })
+
+// logout
+
+authRoute.route('/logout').get((req, res, next) => {
+    if (!req.isAuthenticated()) return
+    req.logout((error) => {
+        if (error) next(new ErrorHandler(error.status, error.message))
+        res.redirect('/')
+    })
+})
+authRoute.route('/getId').get(isAuthenticated)
 
 module.exports = authRoute

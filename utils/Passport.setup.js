@@ -7,7 +7,7 @@ function passportHandler() {
 
     passport.use(new GoogleStrategy(
         {
-            clientID: process.env.CLIENT_ID, clientSecret: process.env.CLIENT_SECRET,
+            clientID: process.env.id, clientSecret: process.env.secret,
             callbackURL: "/auth/google/callback",
             scope: ['profile', 'email']
         }, async function (accessToken, refreshToken, profile, done) {
@@ -18,7 +18,7 @@ function passportHandler() {
                 }
                 else {
                     const newUser = await user.create({
-                        name: profile?.displayName, email: profile?._json.email, profile_picture: profile?._json?.picture
+                        name: profile?.displayName, email: profile?._json.email, profile_picture: profile?._json?.picture, signUpBy: "Email"
                     })
 
                     done(null, newUser)
