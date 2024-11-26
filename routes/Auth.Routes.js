@@ -1,35 +1,18 @@
 const express = require("express");
 const passport = require("passport");
 const isAuthenticated = require("../middlewares/isAuthenticated");
+const verifyToken = require("../middlewares/verifyJWT.middlewares");
+const user = require("../models/User.model");
 // const isAuthenticated = require("../middlewares/isAuthenticated");
 const authRoute = express.Router()
 
 
 // google login
-authRoute.route('/').get(passport.authenticate('google'));
+authRoute.route('/').get(passport.authenticate('google', { scope: ["profile", "email"], session: false }));
 
-// redirect after authenticate
-authRoute.route('/callback').get(passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('/auth/google/profile')
+
+authRoute.route('/callback').get(passport.authenticate('google', { failureRedirect: '/', session: false }), (req, res) => {
+    res.json({ user: req.user, success: true }); // Send token in the response
 })
-
-// get login user info
-authRoute.route('/profile').get((req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.redirect('/');
-    }
-    res.json({ res: req.user })
-})
-
-// logout
-
-authRoute.route('/logout').get((req, res, next) => {
-    if (!req.isAuthenticated()) return
-    req.logout((error) => {
-        if (error) next(new ErrorHandler(error.status, error.message))
-        res.redirect('/')
-    })
-})
-authRoute.route('/getId').get(isAuthenticated)
 
 module.exports = authRoute

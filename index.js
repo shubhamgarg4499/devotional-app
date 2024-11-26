@@ -1,11 +1,12 @@
 const express = require("express");
 const ErrorMiddleware = require("./middlewares/Error.middleware");
 const app = express()
+const cookieParser = require('cookie-parser')
 require("dotenv").config()
 app.use(express.json())
 const cors = require('cors');
 app.use(cors())
-
+app.use(cookieParser())
 
 // database connecion starts
 const connectDB = require("./utils/ConnectDB");
@@ -31,12 +32,12 @@ passportHandler()
 
 // routes starts
 app.get("/", (req, res, next) => {
-    if (req.isAuthenticated()) {
-        res.send(`<a href="/">Logout</a>`)
-    } else {
+    // if (req.isAuthenticated()) {
+    //     res.send(`<a href="/">Logout</a>`)
+    // } else {
 
-        res.send(`<a href="/auth/google">Login</a>`)
-    }
+    // }
+    res.send(`<a href="/auth/google">Login</a>`)
 
 })
 const authRoute = require("./routes/Auth.Routes");

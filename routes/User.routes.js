@@ -1,13 +1,25 @@
 const express = require("express");
-const { updateProfilePicture, loginWithNumber, getUser, changeUserDetails, changeUserEmail, changeUserPhoneNumber } = require("../controllers/User.controller");
+const { updateProfilePicture, loginWithNumber, changeUserDetails, changeUserEmail, changeUserPhoneNumber } = require("../controllers/User.controller");
+const verifyToken = require("../middlewares/verifyJWT.middlewares");
 const upload = require("../utils/Multer");
 const userRoute = express.Router()
 
+// userRoute.route("/getUserDetails").post(verifyToken, getUser)
 userRoute.route("/login/Number").post(loginWithNumber)
-userRoute.route("/getUserDetails").post(getUser)
-userRoute.route("/changeUserDetails").post(changeUserDetails)
-userRoute.route("/changeUserEmail").post(changeUserEmail)
-userRoute.route("/changeUserPhoneNumber").post(changeUserPhoneNumber)
-userRoute.route("/changeProfilePicture").post(upload.single("profile_picture"), updateProfilePicture)
+userRoute.route("/changeUserDetails").post(verifyToken, changeUserDetails)
+userRoute.route("/changeUserEmail").post(verifyToken, changeUserEmail)
+userRoute.route("/changeUserPhoneNumber").post(verifyToken, changeUserPhoneNumber)
+userRoute.route("/changeProfilePicture").post(verifyToken, upload.single("profile_picture"), updateProfilePicture)
 
+// logout
+userRoute.route('/logout').get(verifyToken, async (req, res, next) => {
+    const { _id } = req.user
+    await user.findByIdAndUpdate({ _id }, { token: null })
+    res.status(200).json({ message: "User Logged Out!", success: true })
+})
+
+// /get user profile info
+userRoute.route(`/profile`).get(verifyToken, (req, res) => {
+    res.status(200).json({ user: req.user })
+})
 module.exports = userRoute

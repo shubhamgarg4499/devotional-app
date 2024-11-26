@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     phone_number: {
         type: String,
+        unique: true
     },
     countryCode: {
         type: String,
@@ -38,8 +39,13 @@ const userSchema = new mongoose.Schema({
     },
     signUpBy: {
         type: String,
-        enum: ["Email", "PhoneNumber"],
+        enum: ["Google", "PhoneNumber"],
         required: true
+    },
+    token: {
+        type: String,
+        required: true,
+        unique: true
     }
     // OTP_Sent: {
     //     type: Date,
