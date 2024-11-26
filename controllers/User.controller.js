@@ -15,7 +15,7 @@ const loginWithNumber = async (req, res, next) => {
 
     try {
         // Find if the user already exists based on phone number and country code
-        const findUser = await user.findOne({ phone_number: phone_number.toString(), countryCode: country_code.toString() });
+        const findUser = await user.findOne({ phone_number: phone_number, countryCode: country_code });
 
         // If user exists, generate token and return user data
         if (findUser) {
@@ -52,7 +52,7 @@ const loginWithNumber = async (req, res, next) => {
         // Send response with the created user's data and the token
         res.send({
             success: true,
-            user: { ...createdUser.toObject() },
+            user: { ...createUser.toObject() },
             token
         });
 
@@ -89,25 +89,29 @@ const loginWithNumber = async (req, res, next) => {
 // updation of name, gender, dob, about
 const changeUserDetails = async (req, res, next) => {
     try {
-        const { _id } = req?.user
-        const findUser = await user.findById(_id)
-        if (!findUser) next(new ErrorHandler(402, "Unauthorised Request"))
-        const { name, gender, dob, about } = req.body
-        if (!name && !gender && !dob && !about) {
-            return next(new ErrorHandler(404, "Give the field which you want to update"))
-        }
-        const query = {}
-        ["name", "gender", "dob", "about"].forEach(e => {
-            if (req.body[e]) {
-                query[e] = req.body[e]
+        const allowedFields = ["name", "gender", "dob", "about"];
+        // Validate that only allowed fields are present
+        for (const key in req.body) {
+            if (!allowedFields.includes(key)) {
+                return next(new ErrorHandler(400, "You can provide only name, gender, dob, about fields"));
             }
-        })
-
-        if (Object.keys(query).length === 0) {
-            return next(new ErrorHandler(400, "No valid fields to update"));
         }
-        const update = await user.findByIdAndUpdate(_id, { query }, { new: true })
-        res.status(200).json({ success: true, updatedUser: { ...update } })
+        const _id = String(req?.user._id)
+        const findUser = await user.findById(_id)
+
+        if (!findUser) next(new ErrorHandler(401, "Unauthorised Request"))
+
+        // if (!name && !gender && !dob && !about) {
+        //     return next(new ErrorHandler(404, "Give the field which you want to update"))
+        // }
+        // Check if any valid fields are provided to update
+        const updateFields = Object.keys(req.body);
+        if (updateFields.length === 0) {
+            return next(new ErrorHandler(400, "No valid fields provided to update"));
+        }
+
+        const update = await user.findByIdAndUpdate(_id, { ...req.body }, { new: true })
+        res.status(200).json({ success: true, user: { ...update.toObject() } })
     } catch (error) {
         return new ErrorHandler(error.status, error.message)
     }
@@ -118,20 +122,19 @@ const updateProfilePicture = async (req, res, next) => {
     try {
         const { _id } = req.user
         const profile_picture = req?.file
-        if (!id) next(new ErrorHandler(404, "User ID Not Found"))
+        // res.send(profile_picture)
+        if (!_id) next(new ErrorHandler(404, "User ID Not Found"))
 
         if (!profile_picture) {
             return next(new ErrorHandler(400, "Please Upload a Profile Picture"))
         }
 
-        const findUser = await user.findByIdAndUpdate(_id, { profile_picture }, { new: true })
-        res.status(200).json({ success: true, user: { ...findUser } })
+        const findUser = await user.findByIdAndUpdate(_id, { profile_picture: profile_picture.path }, { new: true })
+        res.status(200).json({ success: true, user: { ...findUser.toObject() } })
     } catch (error) {
         return next(new ErrorHandler(400, "Error occured while updating Profile Picture! Please Try Again"))
     }
-
 }
-
 // user email update only when user created account with mobile number
 const changeUserEmail = async (req, res, next) => {
     try {
@@ -141,11 +144,12 @@ const changeUserEmail = async (req, res, next) => {
 
         if (!findUser) next(new ErrorHandler(404, "User Not Found"))
         if (!email) next(new ErrorHandler(404, "Give your Updated gmail"))
-        if (findUser.signUpBy == "Email") {
+
+        if (findUser.signUpBy == "Google") {
             return next(new ErrorHandler(400, "You cant change Email of this Account Because this account was created with Email"))
         }
         const updateUser = await user.findByIdAndUpdate(_id, { email }, { new: true })
-        res.status(200).json({ success: true, user: { ...updateUser } })
+        res.status(200).json({ success: true, user: { ...updateUser.toObject() } })
     } catch (error) {
         return next(new ErrorHandler(error.status, error.message))
     }
@@ -163,7 +167,7 @@ const changeUserPhoneNumber = async (req, res, next) => {
             return next(new ErrorHandler(400, "You cant change Phone Number of this Account Because this account was created with Phone Number"))
         }
         const updateUser = await user.findByIdAndUpdate(_id, { phone_number, countryCode }, { new: true })
-        res.status(200).json({ success: true, user: { ...updateUser } })
+        res.status(200).json({ success: true, user: { ...updateUser.toObject() } })
     } catch (error) {
         return next(new ErrorHandler(error.status, error.message))
     }
