@@ -7,6 +7,8 @@ const verifyToken = async (req, res, next) => {
     if (!token) {
         return next(new ErrorHandler(401, "Unauthorised Request: No token provided"))
     }
+
+
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (decoded.email) {
@@ -14,15 +16,23 @@ const verifyToken = async (req, res, next) => {
             if (!userData) {
                 return next(new ErrorHandler(404, "User not found"));
             }
-            if (userData.token != token) next(new ErrorHandler(401, `Unauthorised Request: Expired or Wrong Token`))
+            if (userData.token != token) {
+                return next(new ErrorHandler(401, `Unauthorised Request: Expired or Wrong Token`))
+            }
             req.user = userData
             return next();
-        } else if (decoded.phone_number) {
+        }
+
+
+
+        else if (decoded.phone_number) {
             const userData = await user.findOne({ phone_number: decoded.phone_number })
             if (!userData) {
                 return next(new ErrorHandler(404, "User not found"));
             }
-            if (userData.token != token) next(new ErrorHandler(401, `Unauthorised Request: Expired or Wrong Token`))
+            if (userData.token != token) {
+                return next(new ErrorHandler(401, `Unauthorised Request: Expired or Wrong Token`))
+            }
             req.user = userData
             return next();
         }

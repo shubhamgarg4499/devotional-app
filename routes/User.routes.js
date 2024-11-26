@@ -1,6 +1,8 @@
 const express = require("express");
 const { updateProfilePicture, loginWithNumber, changeUserDetails, changeUserEmail, changeUserPhoneNumber } = require("../controllers/User.controller");
 const verifyToken = require("../middlewares/verifyJWT.middlewares");
+const user = require("../models/User.model");
+const ErrorHandler = require("../utils/ErrorCLass");
 const upload = require("../utils/Multer");
 const userRoute = express.Router()
 
@@ -13,11 +15,15 @@ userRoute.route("/changeProfilePicture").post(verifyToken, upload.single("profil
 
 // logout
 userRoute.route('/logout').get(verifyToken, async (req, res, next) => {
-    const { _id } = req.user
-    const user = await user.findById(_id)
-    user.token = null
-    await user.save({ validateBeforeSave: false })
-    res.status(200).json({ message: "User Logged Out!", success: true })
+    try {
+        const { _id } = req?.user
+        const Finduser = await user.findById(_id)
+        Finduser.token = null
+        await Finduser.save({ validateBeforeSave: false })
+        res.status(200).json({ message: "User Logged Out!", success: true })
+    } catch (error) {
+        return next(new ErrorHandler(error.status, error.message))
+    }
 })
 
 // /get user profile info
