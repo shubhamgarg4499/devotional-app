@@ -15,18 +15,18 @@ connectDB()
 // database connecion ends
 
 // session
-const session = require("express-session")
-app.use(session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false
-}))
+// const session = require("express-session")
+// app.use(session({
+//     secret: "secret",
+//     resave: false,
+//     saveUninitialized: false
+// }))
 
 // passport setup starts
 const passport = require("passport");
 const passportHandler = require("./utils/Passport.setup");
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 passportHandler()
 // passport setup ends
 
