@@ -14,7 +14,9 @@ userRoute.route("/changeProfilePicture").post(verifyToken, upload.single("profil
 // logout
 userRoute.route('/logout').get(verifyToken, async (req, res, next) => {
     const { _id } = req.user
-    await user.findByIdAndUpdate({ _id }, { token: null })
+    const user = await user.findById(_id)
+    user.token = null
+    await user.save({ validateBeforeSave: false })
     res.status(200).json({ message: "User Logged Out!", success: true })
 })
 
