@@ -28,6 +28,6 @@ userRoute.route('/logout').get(verifyToken, async (req, res, next) => {
 
 // /get user profile info
 userRoute.route(`/profile`).get(verifyToken, (req, res) => {
-    res.status(200).json({ user: req.user })
+    res.status(200).json({ success: true, user: req.user })
 })
 module.exports = userRoute
