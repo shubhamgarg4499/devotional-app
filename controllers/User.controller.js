@@ -57,7 +57,7 @@ const loginWithNumber = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new ErrorHandler(error.status, error.message));
+        return next(new ErrorHandler(error.status, error));
     }
 };
 
