@@ -15,7 +15,7 @@ const loginWithNumber = async (req, res, next) => {
 
     try {
         // Find if the user already exists based on phone number and country code
-        const findUser = await user.findOne({ phone_number: phone_number, countryCode: country_code });
+        const findUser = await user.findOne({ phone_number: phone_number, countryCode: country_code, email: null });
 
         // If user exists, generate token and return user data
         if (findUser) {

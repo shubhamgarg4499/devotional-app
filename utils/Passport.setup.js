@@ -65,7 +65,8 @@ function passportHandler() {
                         email: profile._json.email,
                         profile_picture: profile._json.picture,
                         signUpBy: "Google", // Mark as signed up via Google,
-                        token: "null"
+                        token: "null",
+                        phone_number: null
                     });
                     const token = await jwt.sign(
                         { id: createuser._id, email: createuser.email },
