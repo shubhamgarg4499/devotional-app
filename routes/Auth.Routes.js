@@ -12,7 +12,8 @@ authRoute.route('/').get(passport.authenticate('google', { scope: ["profile", "e
 
 
 authRoute.route('/callback').get(passport.authenticate('google', { failureRedirect: '/', session: false }), (req, res) => {
-    res.json({ user: req.user, success: true }); // Send token in the response
+    // res.send("done")
+    res.json({ user: req.user, success: true, token: req?.user?.token }); // Send token in the response
 })
 
 module.exports = authRoute

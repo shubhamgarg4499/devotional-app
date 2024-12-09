@@ -14,13 +14,6 @@ const ErrorHandler = require("./utils/ErrorCLass");
 connectDB()
 // database connecion ends
 
-// session
-// const session = require("express-session")
-// app.use(session({
-//     secret: "secret",
-//     resave: false,
-//     saveUninitialized: false
-// }))
 
 // passport setup starts
 const passport = require("passport");
@@ -32,13 +25,8 @@ passportHandler()
 
 // routes starts
 app.get("/", (req, res, next) => {
-    // if (req.isAuthenticated()) {
-    //     res.send(`<a href="/">Logout</a>`)
-    // } else {
 
-    // }
     res.send(`<a href="/auth/google">Login</a>`)
-
 })
 const authRoute = require("./routes/Auth.Routes");
 const isAuthenticated = require("./middlewares/isAuthenticated");
@@ -46,10 +34,11 @@ app.use("/auth/google", authRoute)
 
 
 // userRoutes
-const userRoute = require('./routes/User.routes')
+const userRoute = require('./routes/User.routes');
+const quesRouter = require("./routes/Questions.routes");
 
 app.use('/user', userRoute)
-
+app.use('/api', quesRouter)
 
 // routes ends
 

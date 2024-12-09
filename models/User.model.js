@@ -57,3 +57,54 @@ const userSchema = new mongoose.Schema({
 const user = mongoose.model("user", userSchema)
 
 module.exports = user
+
+
+
+
+
+
+// const apis = [
+//     {
+//         name: "google authentication",
+//         url: "https://devotional-app.onrender.com/auth/google",
+//     },
+//     {
+//         name: "get user details",
+//         url: "https://devotional-app.onrender.com/user/profile",
+//         required: ["token"]
+//     },
+//     {
+//         name: "Logout user",
+//         url: "https://devotional-app.onrender.com/user/logout",
+//         required: ["token"]
+//     },
+//     {
+//         name: "Login with number",
+//         url: "https://devotional-app.onrender.com/user/login/Number",
+//         required: ["country_code", "phone_number"]
+//     },
+//     {
+//         name: "Change user basic details",
+//         url: "https://devotional-app.onrender.com/user/changeUserDetails",
+//         required: ["token", "name(optional)", "about(optional)", "dob(optional)", "gender(optional)"]
+//     },
+//     {
+//         name: "Change user email",
+//         url: "https://devotional-app.onrender.com/user/changeUserEmail",
+//         required: ["token", "email(required)"]
+//     },
+//     {
+//         name: "Change user phone number",
+//         url: "https://devotional-app.onrender.com/user/changeUserPhoneNumber",
+//         required: ["token", "phone_number(required)", "country_code(required)"]
+//     },
+//     {
+//         name: "Change user profile picture",
+//         url: "https://devotional-app.onrender.com/user/changeProfilePicture",
+//         required: ["token", "profile_picture(required)"]
+//     },
+
+
+// ]
+
+

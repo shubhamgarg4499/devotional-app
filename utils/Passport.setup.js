@@ -77,7 +77,7 @@ function passportHandler() {
                     await createuser.save({ validateBeforeSave: false })
                     // Attach the token to the user object
                     // user.token = token;
-                    return done(null, { ...createuser.toObject(), token, success: true, }); // Pass the user object with the token
+                    return done(null, { ...createuser.toObject(), token }); // Pass the user object with the token
                 }
 
                 // Create a JWT token
@@ -91,7 +91,7 @@ function passportHandler() {
                 // Attach the token to the user object
                 // user.token = token;
 
-                return done(null, { ...User.toObject(), token, success: true }); // Pass the user object with the token
+                return done(null, { ...User.toObject(), token }); // Pass the user object with the token
             } catch (error) {
                 return done(new ErrorHandler(error.status, error.message))
             }

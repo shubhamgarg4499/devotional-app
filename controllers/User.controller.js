@@ -57,7 +57,7 @@ const loginWithNumber = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new ErrorHandler(500, error.message));
+        return next(new ErrorHandler(error.status, error.message));
     }
 };
 
@@ -85,6 +85,10 @@ const loginWithNumber = async (req, res, next) => {
 //         return next(new ErrorHandler(error.status, error?.message))
 //     }
 // }
+
+
+
+
 
 // updation of name, gender, dob, about
 const changeUserDetails = async (req, res, next) => {
