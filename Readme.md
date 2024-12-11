@@ -181,3 +181,30 @@
 ### ON ERROR
 
 - Error Message (It's A server Error Not A custom Error)
+
+# 8) Change User Phone Number
+
+- POST METHOD
+- URL https://devotional-app.onrender.com/user/changeDetails
+
+### Parameters
+
+- ### token (In Header) (required)
+- name, phone_number, email, gender, dob, about (all are in string) (all are optional)
+
+### ERROR if phone number is primary and trying to change it
+
+- You cant change Phone Number of this Account Because this account was created with Phone Number
+
+### ERROR if Email is primary and trying to change it
+
+- You cant change Email of this Account Because this account was created with Email
+
+### Response
+
+- success: true
+- user (user details with token)
+
+### ON ERROR
+
+- Error Message (It's A server Error Not A custom Error)

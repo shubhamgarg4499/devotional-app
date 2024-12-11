@@ -28,6 +28,9 @@ app.get("/", (req, res, next) => {
 
     res.send(`<a href="/auth/google">Login</a>`)
 })
+
+
+
 const authRoute = require("./routes/Auth.Routes");
 const isAuthenticated = require("./middlewares/isAuthenticated");
 app.use("/auth/google", authRoute)
@@ -36,6 +39,7 @@ app.use("/auth/google", authRoute)
 // userRoutes
 const userRoute = require('./routes/User.routes');
 const quesRouter = require("./routes/Questions.routes");
+const user = require("./models/User.model");
 
 app.use('/user', userRoute)
 app.use('/api', quesRouter)

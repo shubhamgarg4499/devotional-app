@@ -1,5 +1,5 @@
 const express = require("express");
-const { updateProfilePicture, loginWithNumber, changeUserDetails, changeUserEmail, changeUserPhoneNumber } = require("../controllers/User.controller");
+const { updateProfilePicture, loginWithNumber, changeUserDetails, changeUserEmail, changeUserPhoneNumber, changeDetails } = require("../controllers/User.controller");
 const verifyToken = require("../middlewares/verifyJWT.middlewares");
 const user = require("../models/User.model");
 const ErrorHandler = require("../utils/ErrorCLass");
@@ -12,6 +12,8 @@ userRoute.route("/changeUserDetails").post(verifyToken, changeUserDetails)
 userRoute.route("/changeUserEmail").post(verifyToken, changeUserEmail)
 userRoute.route("/changeUserPhoneNumber").post(verifyToken, changeUserPhoneNumber)
 userRoute.route("/changeProfilePicture").post(verifyToken, upload.single("profile_picture"), updateProfilePicture)
+userRoute.route("/changeDetails").post(verifyToken, upload.single("profile_picture"), changeDetails)
+
 
 // logout
 userRoute.route('/logout').get(verifyToken, async (req, res, next) => {

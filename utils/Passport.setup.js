@@ -4,52 +4,17 @@ const ErrorHandler = require("./ErrorCLass");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-// function passportHandler() {
+const CLIENT_ID_RENDER = process.env.CLIENT_ID
+const CLIENT_SECRET_RENDER = process.env.CLIENT_SECRET
 
-//     passport.use(new GoogleStrategy(
-//         {
-//             clientID: process.env.id, clientSecret: process.env.secret,
-//             callbackURL: "/auth/google/callback",
-//             scope: ['profile', 'email']
-//         }, async function (accessToken, refreshToken, profile, done) {
-//             try {
-//                 const findedUser = await user.findOne({ email: profile._json.email })
-//                 if (findedUser) {
-//                     done(null, findedUser)
-//                 }
-//                 else {
-//                     const newUser = await user.create({
-//                         name: profile?.displayName, email: profile?._json.email, profile_picture: profile?._json?.picture, signUpBy: "Email"
-//                     })
-
-//                     done(null, newUser)
-//                 }
-//             } catch (error) {
-//                 done(new ErrorHandler(error.status, error.message))
-//             }
-//         }))
-
-//     passport.serializeUser((user, done) => {
-//         done(null, user?._id)
-//     })
-
-//     passport.deserializeUser(async (_id, done) => {
-//         try {
-//             const findUser = await user.findById(_id)
-//             done(null, findUser)
-//         } catch (error) {
-//             done(new ErrorHandler(error.status, error.message));
-//         }
-
-//     })
-// }
-
+const CLIENT_ID_LOCAL = process.env.id
+const CLIENT_SECRET_LOCAL = process.env.secret
 
 function passportHandler() {
     passport.use(new GoogleStrategy(
         {
-            clientID: process.env.CLIENT_ID, // Use your actual client ID
-            clientSecret: process.env.CLIENT_SECRET, // Use your actual client secret
+            clientID: CLIENT_ID_LOCAL, // Use your actual client ID
+            clientSecret: CLIENT_SECRET_LOCAL, // Use your actual client secret
             callbackURL: "/auth/google/callback",
             scope: ["profile", "email"], // Requesting access to basic profile and email
         },
@@ -66,7 +31,8 @@ function passportHandler() {
                         profile_picture: profile._json.picture,
                         signUpBy: "Google", // Mark as signed up via Google,
                         token: "null",
-                        phone_number: null
+                        phone_number: null,
+                        profile_picture: "multerImages/default-picture.png"
                     });
                     const token = await jwt.sign(
                         { id: createuser._id, email: createuser.email },

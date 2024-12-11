@@ -1,6 +1,7 @@
 const user = require("../models/User.model")
 const ErrorHandler = require("../utils/ErrorCLass")
 const jwt = require('jsonwebtoken');
+const deleteFile = require("../utils/DeleteFile");
 require("dotenv").config();
 // login and signup with mobile number
 
@@ -38,7 +39,8 @@ const loginWithNumber = async (req, res, next) => {
             phone_number: phone_number,
             countryCode: country_code,
             signUpBy: "PhoneNumber",
-            token: "null"
+            token: "null",
+            profile_picture: "multerImages/default-picture.png"
         });
 
         // Create JWT token for new user
@@ -120,7 +122,6 @@ const changeUserDetails = async (req, res, next) => {
         return new ErrorHandler(error.status, error.message)
     }
 }
-
 // updateProfilePicture
 const updateProfilePicture = async (req, res, next) => {
     try {
@@ -177,4 +178,31 @@ const changeUserPhoneNumber = async (req, res, next) => {
     }
 }
 
-module.exports = { changeUserDetails, updateProfilePicture, loginWithNumber, changeUserEmail, changeUserPhoneNumber }
+const changeDetails = async (req, res, next) => {
+    try {
+        const { _id } = req?.user
+        const { name, phone_number, email, gender, dob, about } = req?.body
+        const { path } = req?.file
+        const findUser = await user.findById(_id)
+        if (phone_number && findUser.signUpBy == "PhoneNumber") {
+            return next(new ErrorHandler(400, "You cant change Phone Number of this Account Because this account was created with Phone Number"))
+        }
+        if (email && findUser.signUpBy == "Google") {
+            return next(new ErrorHandler(400, "You cant change Email of this Account Because this account was created with Email"))
+        }
+        const updateUser = await user.findByIdAndUpdate(_id, {
+            ...req?.body
+        }, { new: true })
+        if (path) {
+            deleteFile(updateUser.profile_picture)
+            updateUser.profile_picture = path
+            await updateUser.save({ validateBeforeSave: false })
+        }
+        res.status(201).json({ success: true, user: { ...updateUser.toObject() } })
+    } catch (error) {
+        next(new ErrorHandler(error.status, error.message))
+    }
+}
+
+module.exports = { changeUserDetails, updateProfilePicture, loginWithNumber, changeUserEmail, changeUserPhoneNumber, changeDetails }
+
