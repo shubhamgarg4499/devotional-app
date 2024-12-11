@@ -13,8 +13,8 @@ const CLIENT_SECRET_LOCAL = process.env.secret
 function passportHandler() {
     passport.use(new GoogleStrategy(
         {
-            clientID: CLIENT_ID_LOCAL, // Use your actual client ID
-            clientSecret: CLIENT_SECRET_LOCAL, // Use your actual client secret
+            clientID: CLIENT_ID_RENDER, // Use your actual client ID
+            clientSecret: CLIENT_SECRET_RENDER, // Use your actual client secret
             callbackURL: "/auth/google/callback",
             scope: ["profile", "email"], // Requesting access to basic profile and email
         },
